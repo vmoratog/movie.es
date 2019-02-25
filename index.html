@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movi.es</title>
+  <link rel="stylesheet" href="css/all.css" />
+  <style>
+    body {
+      display: grid;
+      grid-template-columns: 10% 1fr;
+      grid-template-rows: 70px 1fr;
+      grid-template-areas: "header header"
+                            "aside pelis";
+      height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0px;
+    }
+    .Movie {
+      grid-area: header;
+      box-shadow: 0 2px 20px 5px #f2f2f2;
+      /*      z-index: 1*/
+      padding: 0 3em;
+      display: -webkit-box;
+      display: flex;
+      -webkit-box-align: center;
+      justify-content: space-between;
+      align-items: center;
+    }
+  
+    .logo {
+      height: 80px;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      flex: 1;
+    }
+    .brand {
+      display: -webkit-box;
+      -webkit-box-align: center;
+    }
+
+    .logo-image {
+      width: 65px;
+    }
+    .logo-name {
+      margin: 0 10px 0 0;
+      color: white;
+      -webkit-text-stroke: 1px #fd6766; /*para que solo salga con color el borde de la letra*/
+    }
+    .movie-form {
+      flex: 2;
+    }
+    .movie-form-input {
+      width: 100%;
+      border-radius: .25rem;
+      box-shadow: none;
+      border: 1px solid #b2b1b6;
+      padding: .5em;
+    }
+    .movie-boton {
+      display: none;
+    }
+    .user {
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      flex: 1;
+      justify-content: flex-end;
+    }
+    .username {
+      color: #3c464f;
+      font-weight: 700;
+      margin-right: 1em;
+      font-size: 20px;
+    }
+    .user-image {
+      width: 50px;
+      border-radius: 50%;
+    }
+    .Menu {
+      background: #fd6766;
+      display: grid;
+      grid-area: aside;
+      padding: 3em 0;
+      align-content: space-between;
+      margin: 0 30px 0 0;
+      /*z-index: 2;*/
+
+    }
+    .Menu-list {
+      display: grid;
+      -webkit-box-pack: center;
+      justify-content: center;
+      list-style: none; /*le quita la viñeta del puntico*/
+      margin: 0;
+      padding: 1em 0;
+      text-align: center;
+    }
+    .Menu-list-item {
+      padding-bottom: 1em;
+    }
+    .Menu-list-item a {
+      color: white;
+      text-decoration: none
+    }
+    .Menu-list-item a i {
+      font-size: 32px;
+      font-size: 2rem
+    }
+    .movies {
+      grid-area: pelis;
+      padding: 1em 3em;
+    }
+    h2 {
+      font-size: 19.2px;
+      font-size: 1.2rem
+    }
+    .movie-arrow {
+      display: none;
+    }
+    .movie-container {
+      display: grid;
+      grid-gap: 2em;
+      grid-template-columns: repeat(3, 1fr); /*quedan los 3 cuadros en la misma fila, cree 3 columnas*/
+    }
+    .movie-container-item {
+      position: relative;
+      color: white;
+      transition: .3s;
+      /*      overflow: hidden;*/
+    }
+    .movie-image {
+      width: 100%; /*la imagende la pelicula queda del mismo ancho que su descripcion*/
+      vertical-align: top; 
+    }
+    .movie-description-overlay {
+      background: rgba(253, 103, 102, 0.72);
+      color: white;  
+      position: absolute; /*se le puso a etiqueta a o .movie-container-item posicio relativa */
+      bottom: 0;
+      right: 0;
+      left: 0; /*al poner estos margenes como 0, elcuadro de descripcion se sobrepone a la imagen de la pelicula */
+      padding: 0.5em;
+      height: 50%;
+      transition: .3s;
+      }
+    .movie-item-title {
+      margin: 0 0 .5em;
+      color: white; 
+    }
+    .movie-summary {
+      margin: 0;
+      font-weight: 300;
+    }
+    .movie-container-item:hover .movie-description-overlay {
+      height: 100%;
+	    padding: 0 .5em;
+    }
+    .movie-container-item:hover .movie-item-title {
+      padding-top: 1em;
+    }
+
+
+    @media screen and (max-width:1024px) {
+      .movie-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .movie-description-overlay {
+        height: 20%;
+      }
+      .movie-summary {
+        opacity: 0;
+        transition: .3s
+      }
+      .movie-container-item:hover .movie-summary {
+        opacity: 1;
+      }
+      .Menu {
+        width: 100%;
+      }
+      
+    }
+
+    @media screen and (max-width:767px) {
+      body {
+        grid-template-rows: 1fr 1fr;
+        grid-template-columns: 20% 1fr
+      }
+      .Movie {
+        flex-direction: column;
+        /*        overflow: hidden;*/
+        transition: 0.3s;
+      }
+      .movie-boton {
+        display: flex;
+        font-size: 2rem;
+      }
+      .logo {
+        width: -webkit-fill-available;
+        justify-content: space-between;
+      }
+      .movie-form {
+        margin: 10px 0;
+      }
+      .user {
+        margin: 5px 0;
+        justify-self: center;
+      }
+      .movies {
+        position: relative;
+      }
+      .Movie.active {
+        height: 100%
+      }
+      .movie-container {
+        grid-template-columns: 1fr;
+      }
+      .movie-arrow {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: #fd6766;
+        color: white;
+        padding: 1em;
+        transition: .3s;
+        /*        z-index: 2;*/
+      }
+      .Menu {
+        position: relative;
+        left: -100%;
+        transition: .3s;
+      }
+      .Menu.active {
+		    left: 0;
+      } /*al haer click en la flecha, aparece el menu*/
+      .movies.active {
+        grid-column-start: 1;
+		    transition: .3s;
+      }
+      .movie-arrow.active {
+        -webkit-transform: rotate(180deg);
+		    transform: rotate(180deg);
+      }
+      .movie-arrow .close, .movie-arrow.active .open {
+        display: none;
+      }
+
+      .movie-arrow.active .close {
+        display: block;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <header class="Movie" id="movie">
+    <div class="logo">
+      <div class="brand">
+          <img class="logo-image" src="C:\Users\Valentina\Desktop\ejemplos grid\movies\img/popcorn.png"
+          alt="popcorn" />
+          <h1 class="logo-name">Movie.es</h1>
+      </div>
+      <span class="movie-boton fa fa-bars" id="burguerBoton"></span>
+    </div>
+    <form class="movie-form">
+      <input class="movie-form-input" type="search" name=""
+      placeholder="Busca tu peli, actor, actriz o director favorito" />
+    </form>
+    <a class="user" href="#">
+      <span class="username">Bambi Rodríguez</span>
+      <img class="user-image" src="C:\Users\Valentina\Desktop\ejemplos grid\movies\img/bambi.jpg"
+        alt="bambi" />
+    </a>
+
+  </header>
+  <aside class="Menu" id="menu">
+    <ul class="Menu-list">
+      <li class="Menu-list-item">
+        <a href="#">
+          <i class="fa fa-home"></i>
+          <p>Home</p>
+        </a>
+      </li>
+
+      <li class="Menu-list-item">
+        <a href="#">
+          <i class="fa fa-fire"></i>
+          <p>Trending</p>
+        </a>
+      </li>
+
+      <li class="Menu-list-item">
+        <a href="#">
+          <i class="fa fa-heart"></i>
+          <p>Más likes</p>
+        </a>
+      </li>
+    </ul>
+
+    <ul class="Menu-list">
+      <li class="Menu-list-item">
+        <a href="#">
+          <i class="fa fa-cog"></i>
+          <p>Ajustes</p>
+        </a>
+      </li>
+    </ul>
+  </aside>
+  <section class="movies active" id="peliculas">
+    <span class="movie-arrow" id="angle">
+      <i class="open fa fa-angle-right"></i>
+      <i class="close fa fa-times"></i>
+    </span>
+    <h2 class="movies-title">Ahora en el cine</h2>
+      <div class="movie-container">
+        <a class="movie-container-item" href="javascript:void(0)">
+          <img class="movie-image" src="movie1.jpg" alt="">
+        <div class="movie-description-overlay">
+          <h3 class="movie-item-title">The Secret Life of Pets</h3>
+          <p class="movie-summary">The quiet life of a terrier named Max is upended when his owner takes in Duke , a stray whomMax instantly dislikes.</p>
+        </div>
+        </a>
+        <a class="movie-container-item" href="javascript:void(0)">
+          <img class="movie-image" src="movie1.jpg" alt="">
+        <div class="movie-description-overlay">
+          <h3 class="movie-item-title">The Secret Life of Pets</h3>
+          <p class="movie-summary">The quiet life of a terrier named Max is upended when his owner takes in Duke , a stray whomMax instantly dislikes.</p>
+        </div>
+        </a>
+        <a class="movie-container-item" href="javascript:void(0)">
+          <img class="movie-image" src="movie1.jpg" alt="">
+        <div class="movie-description-overlay">
+          <h3 class="movie-item-title">The Secret Life of Pets</h3>
+          <p class="movie-summary">The quiet life of a terrier named Max is upended when his owner takes in Duke , a stray whomMax instantly dislikes.</p>
+        </div>
+        </a>
+      </div>
+
+      <h2 class="movies-title">Aclamados por la critica</h2>
+      <div class="movie-container">
+        <a class="movie-container-item" href="javascript:void(0)">
+          <img class="movie-image" src="movie1.jpg" alt="">
+        <div class="movie-description-overlay">
+          <h3 class="movie-item-title">The Secret Life of Pets</h3>
+          <p class="movie-summary">The quiet life of a terrier named Max is upended when his owner takes in Duke , a stray whomMax instantly dislikes.</p>
+        </div>
+        </a>
+        <a class="movie-container-item" href="javascript:void(0)">
+          <img class="movie-image" src="movie1.jpg" alt="">
+        <div class="movie-description-overlay">
+          <h3 class="movie-item-title">The Secret Life of Pets</h3>
+          <p class="movie-summary">The quiet life of a terrier named Max is upended when his owner takes in Duke , a stray whomMax instantly dislikes.</p>
+        </div>
+        </a>
+        <a class="movie-container-item" href="javascript:void(0)">
+          <img class="movie-image" src="movie1.jpg" alt="">
+        <div class="movie-description-overlay">
+          <h3 class="movie-item-title">The Secret Life of Pets</h3>
+          <p class="movie-summary">The quiet life of a terrier named Max is upended when his owner takes in Duke , a stray whomMax instantly dislikes.</p>
+        </div>
+        </a>
+      </div>
+
+      <h2 class="movies-title">No te debes perder</h2>
+      <div class="movie-container">
+        <a class="movie-container-item" href="javascript:void(0)">
+          <img class="movie-image" src="movie1.jpg" alt="">
+        <div class="movie-description-overlay">
+          <h3 class="movie-item-title">The Secret Life of Pets</h3>
+          <p class="movie-summary">The quiet life of a terrier named Max is upended when his owner takes in Duke , a stray whomMax instantly dislikes.</p>
+        </div>
+        </a>
+        <a class="movie-container-item" href="javascript:void(0)">
+          <img class="movie-image" src="movie1.jpg" alt="">
+        <div class="movie-description-overlay">
+          <h3 class="movie-item-title">The Secret Life of Pets</h3>
+          <p class="movie-summary">The quiet life of a terrier named Max is upended when his owner takes in Duke , a stray whomMax instantly dislikes.</p>
+        </div>
+        </a>
+        <a class="movie-container-item" href="javascript:void(0)">
+          <img class="movie-image" src="movie1.jpg" alt="">
+        <div class="movie-description-overlay">
+          <h3 class="movie-item-title">The Secret Life of Pets</h3>
+          <p class="movie-summary">The quiet life of a terrier named Max is upended when his owner takes in Duke , a stray whomMax instantly dislikes.</p>
+        </div>
+        </a>
+      </div> 
+  </section>
+<script src="index.js"></script>
+</body>
+</html>
